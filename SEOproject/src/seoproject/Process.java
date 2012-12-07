@@ -10,7 +10,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import seoproject.Process;
@@ -83,9 +86,51 @@ public class Process
         return map;
     }
     
-    public static float tf_idf(HashMap map)
+    public static HashMap tf_idf(HashMap doc_comp, HashMap corpus, ArrayList<ArrayList<String>> docs)
     {
-        return 0.0f;
+        Set keys = doc_comp.keySet();
+        Iterator it = keys.iterator();
+        int max_occ = 0; // occ max ds doc_comp
+        while (it.hasNext())
+        {
+            String key = (String) it.next();
+            int occ = (int)doc_comp.get(key);
+            double tf = occ / max_occ;
+            int nx = 0;
+            for (ArrayList<String> doc : docs)
+            {
+                for (String word : doc)
+                {
+                    if (word.equals(key))
+                    {
+                        nx++;
+                        break;
+                    }
+                }
+            }
+            double idf = Math.log10(docs.size()/nx) + 1;
+            corpus.put(key, tf*idf);
+        }
+        return corpus;
+    }
+    
+    public static double cos_salton(HashMap map1, HashMap map2)
+    {
+        Set keys = map1.keySet();
+        Iterator it = keys.iterator();
+        double d1d2 = 0;
+        double d1 = 0;
+        double d2 = 0;
+        while (it.hasNext())
+        {
+            String key = (String) it.next();
+            double val1 = (double)map1.get(key);
+            double val2 = (double)map2.get(key);
+            d1d2 += val1 * val2;
+            d1 += val1;
+            d2 += val2;
+        }
+        return (d1d2/(d1*d2));
     }
     
     public static String uniform(String r)
@@ -97,7 +142,7 @@ public class Process
         r = r.replaceAll("ç", "c");
         r = r.replaceAll("[èéêë]", "e");
         r = r.replaceAll("[ìíîï]", "i");
-        r = r.replaceAll("ñ", "n");                            
+        r = r.replaceAll("ñ", "n");
         r = r.replaceAll("[òóôõö]", "o");
         r = r.replaceAll("œ", "oe");
         r = r.replaceAll("[ùúûü]", "u");
