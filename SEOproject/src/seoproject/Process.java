@@ -36,6 +36,7 @@ public class Process
                 if (streamTokenizer.ttype == StreamTokenizer.TT_WORD) // Si c'est un mot
                 {
                     char first_letter = streamTokenizer.sval.charAt(0); // Premiere lettre du mot
+                    
                     String dico = "lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
                     try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))
                     {
@@ -69,7 +70,6 @@ public class Process
         {
             Logger.getLogger(Process.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tf_idf(map);
         return map;
     }
     
