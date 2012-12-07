@@ -61,7 +61,7 @@ public class SEOproject
                     ArrayList<String> list_lem = Process.lemmatisation (content);
                     for (String mot : list_lem)
                     {
-                         // Create file 
+                   
 
                         out.write(mot + " ");
                         //Close the output stream
