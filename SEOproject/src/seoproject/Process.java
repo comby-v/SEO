@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import seoproject.Process;
@@ -22,9 +24,9 @@ import seoproject.Process;
 public class Process
 {
     /* Lemmatisation */
-    public static ArrayList<String> lemmatisation(String str)
+    public static HashMap lemmatisation(String str)
     {
-        ArrayList<String> list = new ArrayList<String>();
+        HashMap map = new HashMap();
         StringReader str_reader = new StringReader(str);
         StreamTokenizer streamTokenizer = new StreamTokenizer(str_reader);
         try
@@ -43,7 +45,15 @@ public class Process
                             if (line.contains(streamTokenizer.sval)) // Si la ligne contient le mot recherché
                             {
                                 String[] split = line.split("[ \t]");
-                                list.add(split[1]);
+                                if (map.containsKey(split[1]))
+                                {
+                                    int occ = (int)map.get(split[1]);
+                                    map.put(split[1], ++occ);
+                                }
+                                else
+                                {
+                                    map.put(split[1], 1);
+                                }
                                 break; // On s'arrete de lire le dico
                             }
                         }
@@ -59,6 +69,12 @@ public class Process
         {
             Logger.getLogger(Process.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return list;
+        tf_idf(map);
+        return map;
+    }
+    
+    public static float tf_idf(HashMap map)
+    {
+        return 0.0f;
     }
 }
