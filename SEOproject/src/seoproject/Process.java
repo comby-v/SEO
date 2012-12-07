@@ -89,11 +89,18 @@ public class Process
     public static HashMap tf_idf(HashMap doc_comp, HashMap corpus, ArrayList<ArrayList<String>> docs)
     {
         Set keys = doc_comp.keySet();
-        Iterator it = keys.iterator();
+        Iterator it1 = keys.iterator();
+        Iterator it2 = keys.iterator();
         int max_occ = 0; // occ max ds doc_comp
-        while (it.hasNext())
+        while (it1.hasNext())
         {
-            String key = (String) it.next();
+            String key = (String) it1.next();
+            int occ = (int)doc_comp.get(key);
+            max_occ = max_occ < occ ? occ : max_occ;
+        }
+        while (it2.hasNext())
+        {
+            String key = (String) it2.next();
             int occ = (int)doc_comp.get(key);
             double tf = occ / max_occ;
             int nx = 0;
