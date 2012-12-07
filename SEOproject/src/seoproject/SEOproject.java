@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 /**
  *
@@ -31,8 +32,12 @@ public class SEOproject {
                URL url2= new URL(args[1]);
                String content1 = loadUrl(url1);
                String content2 = loadUrl(url2);
+               Process proc1 = new Process(content1);
+               Process proc2 = new Process(content2);
+               ArrayList<String> res1 = proc1.lemmatisation();
+               ArrayList<String> res2 = proc2.lemmatisation();
                
-               System.out.println (content1);
+               System.out.println (res1);
                 
                 
                
