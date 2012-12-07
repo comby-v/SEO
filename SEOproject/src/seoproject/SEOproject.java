@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
@@ -32,10 +33,10 @@ public class SEOproject {
         {
             try
             {
-               URL url1 = new URL (args[0]);
-               URL url2= new URL(args[1]);
                String content1 = getTextOnly(args[0]);
                System.out.println (content1);
+               String content2 = getTextOnly(args[1]);
+               System.out.println (content2);
             }
             catch (Exception e)
             {
@@ -57,14 +58,20 @@ public class SEOproject {
    public static String getTextOnly(String url)
    {
        Document doc;
+       String result = "";
         try 
         {
             doc = Jsoup.connect(url).get();
             Elements body = doc.select("body");
             Elements list_balise = body.select("*");
-            list_balise
-            String s=body.text();
-            return s;
+             for (Element element : list_balise)
+             {
+                 if (element.hasText())
+                 {
+                    result += " "+(element.ownText());
+                 }
+             }
+            return result;
             
         } catch (IOException ex)
         {
