@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,20 +21,11 @@ import seoproject.Process;
  */
 public class Process
 {
-    private String content;
-  
-    public Process(String str)
-    {
-        this.content = str.toLowerCase();
-        this.content = Normalizer.normalize(this.content, Normalizer.Form.NFD);
-        this.content = this.content.replaceAll("[^\\p{ASCII}]", "");
-    }
-    
     /* Lemmatisation */
-    public ArrayList<String> lemmatisation()
+    public static ArrayList<String> lemmatisation(String str)
     {
         ArrayList<String> list = new ArrayList<String>();
-        StringReader str_reader = new StringReader(this.content);
+        StringReader str_reader = new StringReader(str);
         StreamTokenizer streamTokenizer = new StreamTokenizer(str_reader);
         try
         {
