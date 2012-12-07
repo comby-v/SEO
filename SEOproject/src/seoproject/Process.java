@@ -10,9 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import seoproject.Process;
@@ -35,33 +33,45 @@ public class Process
             {
                 if (streamTokenizer.ttype == StreamTokenizer.TT_WORD) // Si c'est un mot
                 {
-                    char first_letter = streamTokenizer.sval.charAt(0); // Premiere lettre du mot
-                    
-                    String dico = "lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
-                    try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))
+                    String word = uniform(streamTokenizer.sval);
+                    Boolean isNumber = true;
+                    try
                     {
-                        String line;
-                        while ((line = buf_reader.readLine()) != null) // On lit le dico ligne par ligne
+                        Integer.parseInt(word);
+                    }
+                    catch (Exception e)
+                    {
+                        isNumber = false;
+                    }
+                    if (!word.isEmpty() && !isNumber)
+                    {
+                        char first_letter = word.charAt(0); // Premiere lettre du mot
+                        String dico = "lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
+                        try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))
                         {
-                            if (line.contains(streamTokenizer.sval)) // Si la ligne contient le mot recherché
+                            String line;
+                            while ((line = buf_reader.readLine()) != null) // On lit le dico ligne par ligne
                             {
-                                String[] split = line.split("[ \t]");
-                                if (map.containsKey(split[1]))
+                                if (line.contains(streamTokenizer.sval)) // Si la ligne contient le mot recherché
                                 {
-                                    int occ = (int)map.get(split[1]);
-                                    map.put(split[1], ++occ);
+                                    String[] split = line.split("[ \t]");
+                                    if (map.containsKey(split[1]))
+                                    {
+                                        int occ = (int)map.get(split[1]);
+                                        map.put(split[1], ++occ);
+                                    }
+                                    else
+                                    {
+                                        map.put(split[1], 1);
+                                    }
+                                    break; // On s'arrete de lire le dico
                                 }
-                                else
-                                {
-                                    map.put(split[1], 1);
-                                }
-                                break; // On s'arrete de lire le dico
                             }
                         }
-                    }
-                    catch (FileNotFoundException ex)
-                    {
-                        Logger.getLogger(Process.class.getName()).log(Level.SEVERE, null, ex);
+                        catch (FileNotFoundException ex)
+                        {
+                            Logger.getLogger(Process.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
@@ -76,5 +86,23 @@ public class Process
     public static float tf_idf(HashMap map)
     {
         return 0.0f;
+    }
+    
+    public static String uniform(String r)
+    {
+        r = r.toLowerCase();
+        r = r.replaceAll("\\s", "");
+        r = r.replaceAll("[àáâãäå]", "a");
+        r = r.replaceAll("æ", "ae");
+        r = r.replaceAll("ç", "c");
+        r = r.replaceAll("[èéêë]", "e");
+        r = r.replaceAll("[ìíîï]", "i");
+        r = r.replaceAll("ñ", "n");                            
+        r = r.replaceAll("[òóôõö]", "o");
+        r = r.replaceAll("œ", "oe");
+        r = r.replaceAll("[ùúûü]", "u");
+        r = r.replaceAll("[ýÿ]", "y");
+        r = r.replaceAll("\\W", "");
+        return r;
     }
 }

@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
@@ -17,6 +19,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import seoproject.Process;
 
+
+
 /**
  *
  * @author Vince
@@ -24,15 +28,13 @@ import seoproject.Process;
 public class SEOproject
 {
 
+   
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        if (args.length == 2)
-        {
-            
-            String tab_url[] =
+    public static void main(String[] args)
+    {
+         String tab_url[] =
             {"http://fr.wikipedia.org/wiki/Philosophie",
              "http://fr.wikipedia.org/wiki/Booba",
              "http://fr.wikipedia.org/wiki/Paris",
@@ -50,29 +52,15 @@ public class SEOproject
              "http://fr.wikipedia.org/wiki/Telephone",
              "http://fr.wikipedia.org/wiki/Tabac"
             };
-             
+        
+        
+        // TODO code application logic here
+        if (args.length == 2)
+        {
            try
             {
-               FileWriter fstream = new FileWriter("corpus.txt");
-               BufferedWriter out = new BufferedWriter(fstream);
-               try
-               {
-                for (int i = 0; i < tab_url.length; i++)
-                {
-                    String url = tab_url[i];
-                    String content = getTextOnly (url);
-                    HashMap list_lem = Process.lemmatisation(content);
-                    for (String mot : (String[])list_lem.keySet().toArray())
-                    {
-                        out.write(mot + " ");               
-                    }
-                }
-               }
-               catch (Exception e)
-               {
-                   
-               }
-                out.close();
+                MakeCorpus(tab_url);
+                
                 String content1 = getTextOnly(args[0]);
                 String content2 = getTextOnly(args[1]);
                 String[] split = content1.split(" ");
@@ -125,5 +113,45 @@ public class SEOproject
          }
 
         return "";
+    }
+    
+    public void loadCorpus(String[] tab_url)
+    {
+        ArrayList<ArrayList<String>> list_doc = new ArrayList ();
+        
+        for (int i = 0; i < tab_url.length; i++)
+        {
+            ArrayList list_mot = new ArrayList ();
+            
+            
+        }
+    }
+    
+    public static void  MakeCorpus(String[] tab_url) throws IOException
+    {
+        try
+        {
+         for (int i = 0; i < tab_url.length; i++)
+         {
+             String url = tab_url[i];
+             String content = getTextOnly (url);
+             HashMap map = Process.lemmatisation(content);
+             Set cles = map.keySet();
+             Iterator it = cles.iterator();
+             FileWriter fstream = new FileWriter("corpus_"+i+".txt");
+             BufferedWriter out = new BufferedWriter(fstream);
+             while (it.hasNext())
+             {
+                 String cle = (String) it.next();
+                 out.write(cle + " ");
+                 //Close the output stream
+             }
+            out.close();
+         }
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 }
