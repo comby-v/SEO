@@ -55,6 +55,8 @@ public class SEOproject
             {
                FileWriter fstream = new FileWriter("corpus.txt");
                BufferedWriter out = new BufferedWriter(fstream);
+               try
+               {
                 for (int i = 0; i < tab_url.length; i++)
                 {
                     String url = tab_url[i];
@@ -62,13 +64,14 @@ public class SEOproject
                     HashMap list_lem = Process.lemmatisation(content);
                     for (String mot : (String[])list_lem.keySet().toArray())
                     {
-                   
-
-                        out.write(mot + " ");
-                        //Close the output stream
-                        
+                        out.write(mot + " ");               
                     }
                 }
+               }
+               catch (Exception e)
+               {
+                   
+               }
                 out.close();
                 String content1 = getTextOnly(args[0]);
                 String content2 = getTextOnly(args[1]);
