@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
@@ -58,8 +59,8 @@ public class SEOproject
                 {
                     String url = tab_url[i];
                     String content = getTextOnly (url);
-                    ArrayList<String> list_lem = Process.lemmatisation (content);
-                    for (String mot : list_lem)
+                    HashMap list_lem = Process.lemmatisation(content);
+                    for (String mot : (String[])list_lem.keySet().toArray())
                     {
                    
 
@@ -82,8 +83,8 @@ public class SEOproject
                     }
                 }
 
-                ArrayList<String> res1 = Process.lemmatisation(content1);
-                ArrayList<String> res2 = Process.lemmatisation(content2);
+                HashMap res1 = Process.lemmatisation(content1);
+                HashMap res2 = Process.lemmatisation(content2);
             }
             catch (Exception e)
             {
