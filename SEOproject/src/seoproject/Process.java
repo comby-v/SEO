@@ -66,12 +66,12 @@ public class Process
                                     String[] split = line.split("[ \t]");
                                     if (map.containsKey(split[1]))
                                     {
-                                        int occ = (int)map.get(split[1]);
+                                        double occ = (double)map.get(split[1]);
                                         map.put(split[1], ++occ);
                                     }
                                     else
                                     {
-                                        map.put(split[1], 1);
+                                        map.put(split[1], (double) 1);
                                     }
                                     break; // On s'arrete de lire le dico
                                 }
@@ -97,19 +97,19 @@ public class Process
         Set keys = doc_comp.keySet();
         Iterator it1 = keys.iterator();
         Iterator it2 = keys.iterator();
-        int max_occ = 0; // occ max ds doc_comp
+        double max_occ = 0; // occ max ds doc_comp
         while (it1.hasNext())
         {
             String key = (String) it1.next();
-            int occ = (int)doc_comp.get(key);
+            double occ = (double)doc_comp.get(key);
             max_occ = max_occ < occ ? occ : max_occ;
         }
         while (it2.hasNext())
         {
             String key = (String) it2.next();
-            int occ = (int)doc_comp.get(key);
+            double occ = (double)doc_comp.get(key);
             double tf = occ / max_occ;
-            int nx = 0;
+            double nx = 0;
             for (ArrayList<String> doc : docs)
             {
                 for (String word : doc)
@@ -121,8 +121,12 @@ public class Process
                     }
                 }
             }
-            double idf = Math.log10(docs.size()/nx) + 1;
-            corpus.put(key, tf*idf);
+            if (nx != 0)
+            {
+                double ratio = (double)docs.size()/nx;
+                double idf = Math.log10(ratio) + 1;
+                corpus.put(key, (double)tf*idf);
+            }
         }
         return corpus;
     }

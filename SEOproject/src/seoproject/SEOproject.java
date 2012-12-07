@@ -4,9 +4,17 @@
  */
 package seoproject;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,34 +61,58 @@ public class SEOproject
              "http://fr.wikipedia.org/wiki/Tabac"
             };
         
-        
+         
         // TODO code application logic here
         if (args.length == 2)
         {
            try
             {
-                MakeCorpus(tab_url);
-                
-                String content1 = getTextOnly(args[0]);
-                String content2 = getTextOnly(args[1]);
-                String[] split = content1.split(" ");
-                System.out.println (split.length);
-                int count = 0;
-                for (int i = 0; i < split.length; i++)
+               //MakeCorpus(tab_url);
+                ArrayList<ArrayList<String>> list_doc = new ArrayList ();
+                HashMap corpus_map = new HashMap ();
+
+                for (int i = 0; i < tab_url.length; i++)
                 {
-                    if (!split[i].equals(""))
+                    ArrayList list_mot = new ArrayList ();
+                    String corpus_file = "corpus_" + i + ".txt";
+                    try
                     {
-                        count++;
+                       File f = new File(corpus_file);
+                       InputStream in = new FileInputStream(f);
+                       BufferedReader buf_reader = new BufferedReader(new InputStreamReader(in));
+                       String line;
+                        while ((line = buf_reader.readLine()) != null) 
+                        {
+                           String[] temp_list_word= line.split(" ");
+                           for (String word : temp_list_word )
+                           {
+                                list_mot.add(word);
+                                if (!corpus_map.containsKey(word))
+                                 {
+                                     corpus_map.put(word, (double)0);
+                                 }
+                           }
+                        }
+                        list_doc.add(list_mot);
+                    } 
+                    catch (FileNotFoundException ex) {
+                        Logger.getLogger(SEOproject.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                String content1 = getTextOnly(args[0]);
+                String content2 = getTextOnly(args[1]);
 
                 HashMap res1 = Process.lemmatisation(content1);
                 HashMap res2 = Process.lemmatisation(content2);
+                
+                HashMap vecteur1 = Process.tf_idf(res1, corpus_map, list_doc);
+                HashMap vecteur2 = Process.tf_idf(res2, corpus_map, list_doc);
+                double cosCoef = Process.cos_salton(vecteur1, vecteur2);
+                System.out.println(cosCoef);
             }
             catch (Exception e)
             {
-                System.out.println ("Exception :");
-                System.out.println(e);
+                Logger.getLogger(Process.class.getName()).log(Level.SEVERE, null, e);
             }
         }
         else
@@ -115,16 +147,10 @@ public class SEOproject
         return "";
     }
     
-    public void loadCorpus(String[] tab_url)
+    public void loadCorpus(String[] tab_url) throws IOException
     {
-        ArrayList<ArrayList<String>> list_doc = new ArrayList ();
-        
-        for (int i = 0; i < tab_url.length; i++)
-        {
-            ArrayList list_mot = new ArrayList ();
-            
-            
-        }
+
+                
     }
     
     public static void  MakeCorpus(String[] tab_url) throws IOException
@@ -151,7 +177,7 @@ public class SEOproject
         }
         catch (Exception e)
         {
-
+            
         }
     }
 }
