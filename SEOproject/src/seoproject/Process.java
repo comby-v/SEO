@@ -124,7 +124,7 @@ public class Process
             if (nx != 0)
             {
                 double ratio = (double)docs.size()/nx;
-                double idf = Math.log10(ratio) + 1;
+                double idf = Math.log(ratio) + 1;
                 corpus.put(key, (double)tf*idf);
             }
         }

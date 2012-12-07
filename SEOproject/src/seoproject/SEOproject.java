@@ -108,7 +108,7 @@ public class SEOproject
                 HashMap vecteur1 = Process.tf_idf(res1, corpus_map, list_doc);
                 HashMap vecteur2 = Process.tf_idf(res2, corpus_map, list_doc);
                 double cosCoef = Process.cos_salton(vecteur1, vecteur2);
-                System.out.println(cosCoef);
+                System.out.println(Math.acos(cosCoef));
             }
             catch (Exception e)
             {
