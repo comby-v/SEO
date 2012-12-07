@@ -11,6 +11,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 /**
  *
@@ -29,13 +34,8 @@ public class SEOproject {
             {
                URL url1 = new URL (args[0]);
                URL url2= new URL(args[1]);
-               String content1 = loadUrl(url1);
-               String content2 = loadUrl(url2);
-               
+               String content1 = getTextOnly(args[0]);
                System.out.println (content1);
-                
-                
-               
             }
             catch (Exception e)
             {
@@ -54,7 +54,26 @@ public class SEOproject {
         
     }
     
-    
+   public static String getTextOnly(String url)
+   {
+       Document doc;
+        try 
+        {
+            doc = Jsoup.connect(url).get();
+            Elements body = doc.select("body");
+            Elements list_balise = body.select("*");
+            list_balise
+            String s=body.text();
+            return s;
+            
+        } catch (IOException ex)
+        {
+            Logger.getLogger(SEOproject.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+       
+       return "";
+   }
   public static String loadUrl(URL url) throws IOException {
     InputStream stream = null;
     try
