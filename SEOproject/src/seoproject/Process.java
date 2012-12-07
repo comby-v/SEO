@@ -139,11 +139,11 @@ public class Process
             String key = (String) it.next();
             double val1 = (double)map1.get(key);
             double val2 = (double)map2.get(key);
-            d1d2 += val1 * val2;
-            d1 += val1;
-            d2 += val2;
+            d1d2 += (val1 * val2)*(val1*val2);
+            d1 += val1*val1;
+            d2 += val2*val2;
         }
-        return (d1d2/(d1*d2));
+        return (Math.sqrt(d1d2)/(Math.sqrt(d1)*Math.sqrt(d2)));
     }
     
     public static String uniform(String r)
