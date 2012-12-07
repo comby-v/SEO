@@ -5,9 +5,13 @@
 package seoproject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -50,7 +54,9 @@ public class Process
                     {
                         char first_letter = word.charAt(0); // Premiere lettre du mot
                         String dico = "lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
-                        try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))
+                        File f = new File(dico);
+                        InputStream in = new FileInputStream(f);
+                        try (BufferedReader buf_reader = new BufferedReader(new InputStreamReader(in, "ISO-8859-15")))
                         {
                             String line;
                             while ((line = buf_reader.readLine()) != null) // On lit le dico ligne par ligne
