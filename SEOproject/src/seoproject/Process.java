@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,9 @@ public class Process
   
     public Process(String str)
     {
-        this.content = str;
+        this.content = str.toLowerCase();
+        this.content = Normalizer.normalize(this.content, Normalizer.Form.NFD);
+        this.content = this.content.replaceAll("[^\\p{ASCII}]", "");
     }
     
     /* Lemmatisation */
@@ -35,12 +38,12 @@ public class Process
         StringReader str_reader = new StringReader(this.content);
         StreamTokenizer streamTokenizer = new StreamTokenizer(str_reader);
         try
-        {            
+        {
             while (streamTokenizer.nextToken() != StreamTokenizer.TT_EOF) // Tant que c'est pas la fin de fichier
             {
                 if (streamTokenizer.ttype == StreamTokenizer.TT_WORD) // Si c'est un mot
                 {
-                    char first_letter = streamTokenizer.sval.toLowerCase().charAt(0); // Premiere lettre du mot
+                    char first_letter = streamTokenizer.sval.charAt(0); // Premiere lettre du mot
                     String dico = "lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
                     try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))
                     {
@@ -54,7 +57,6 @@ public class Process
                                 break; // On s'arrete de lire le dico
                             }
                         }
-                        
                     }
                     catch (FileNotFoundException ex)
                     {
