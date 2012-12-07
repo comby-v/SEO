@@ -4,12 +4,9 @@
  */
 package seoproject;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,14 +30,60 @@ public class SEOproject
         // TODO code application logic here
         if (args.length == 2)
         {
-            try
+            
+            String tab_url[] =
+            {"http://fr.wikipedia.org/wiki/Philosophie",
+             "http://fr.wikipedia.org/wiki/Booba",
+             "http://fr.wikipedia.org/wiki/Paris",
+             "http://fr.wikipedia.org/wiki/Pain",
+             "http://fr.wikipedia.org/wiki/Viking",
+             "http://fr.wikipedia.org/wiki/France",
+             "http://fr.wikipedia.org/wiki/Humanit%C3%A9",
+             "http://fr.wikipedia.org/wiki/Politique",
+             "http://fr.wikipedia.org/wiki/Caribou",
+             "http://fr.wikipedia.org/wiki/%C3%89tat",
+             "http://fr.wikipedia.org/wiki/Apple",
+             "http://fr.wikipedia.org/wiki/Sport",
+             "http://fr.wikipedia.org/wiki/Espace_%C3%A9conomique_europ%C3%A9en",
+             "http://fr.wikipedia.org/wiki/Football",
+             "http://fr.wikipedia.org/wiki/Telephone",
+             "http://fr.wikipedia.org/wiki/Tabac"
+            };
+             
+           try
             {
+               FileWriter fstream = new FileWriter("corpus.txt");
+               BufferedWriter out = new BufferedWriter(fstream);
+                for (int i = 0; i < tab_url.length; i++)
+                {
+                    String url = tab_url[i];
+                    String content = getTextOnly (url);
+                    ArrayList<String> list_lem = Process.lemmatisation (content);
+                    for (String mot : list_lem)
+                    {
+                         // Create file 
+
+                        out.write(mot + " ");
+                        //Close the output stream
+                        
+                    }
+                }
+                out.close();
                 String content1 = getTextOnly(args[0]);
                 String content2 = getTextOnly(args[1]);
-                Process proc1 = new Process(content1);
-                Process proc2 = new Process(content2);
-                ArrayList<String> res1 = proc1.lemmatisation();
-                ArrayList<String> res2 = proc2.lemmatisation();
+                String[] split = content1.split(" ");
+                System.out.println (split.length);
+                int count = 0;
+                for (int i = 0; i < split.length; i++)
+                {
+                    if (!split[i].equals(""))
+                    {
+                        count++;
+                    }
+                }
+
+                ArrayList<String> res1 = Process.lemmatisation(content1);
+                ArrayList<String> res2 = Process.lemmatisation(content2);
             }
             catch (Exception e)
             {
