@@ -45,7 +45,6 @@ public class Process
                     }
                     if (!word.isEmpty() && !isNumber)
                     {
-                        System.out.println("word : "+word);
                         char first_letter = word.charAt(0); // Premiere lettre du mot
                         String dico = "lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
                         try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))

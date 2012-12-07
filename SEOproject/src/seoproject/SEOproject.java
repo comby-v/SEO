@@ -8,6 +8,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jsoup.Jsoup;
@@ -58,14 +60,14 @@ public class SEOproject
                 {
                     String url = tab_url[i];
                     String content = getTextOnly (url);
-                    HashMap list_lem = Process.lemmatisation(content);
-                    for (String mot : (String[])list_lem.keySet().toArray())
+                    HashMap map = Process.lemmatisation(content);
+                    Set cles = map.keySet();
+                    Iterator it = cles.iterator();
+                    while (it.hasNext())
                     {
-                         // Create file 
-
-                        out.write(mot + " ");
+                        String cle = (String) it.next();
+                        out.write(cle + " ");
                         //Close the output stream
-                        
                     }
                 }
                 out.close();
