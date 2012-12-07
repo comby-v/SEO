@@ -40,8 +40,8 @@ public class Process
             {
                 if (streamTokenizer.ttype == StreamTokenizer.TT_WORD) // Si c'est un mot
                 {
-                    char first_letter = streamTokenizer.sval.charAt(0); // Premiere lettre du mot
-                    String dico = "/lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
+                    char first_letter = streamTokenizer.sval.toLowerCase().charAt(0); // Premiere lettre du mot
+                    String dico = "lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
                     try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))
                     {
                         String line;
@@ -50,7 +50,7 @@ public class Process
                             if (line.contains(streamTokenizer.sval)) // Si la ligne contient le mot recherché
                             {
                                 String[] split = line.split("[ \t]");
-                                list.add(split[2]);
+                                list.add(split[1]);
                                 break; // On s'arrete de lire le dico
                             }
                         }
