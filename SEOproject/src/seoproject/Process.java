@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import seoproject.Process;
 
 /**
  *
@@ -41,7 +41,7 @@ public class Process
                 if (streamTokenizer.ttype == StreamTokenizer.TT_WORD) // Si c'est un mot
                 {
                     char first_letter = streamTokenizer.sval.charAt(0); // Premiere lettre du mot
-                    String dico = "dico_"+first_letter+".txt"; // Chemin vers le dico
+                    String dico = "/lib/Dico/dico_"+first_letter+".txt"; // Chemin vers le dico
                     try (BufferedReader buf_reader = new BufferedReader(new FileReader(dico)))
                     {
                         String line;

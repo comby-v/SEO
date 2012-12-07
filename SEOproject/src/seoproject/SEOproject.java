@@ -4,7 +4,6 @@
  */
 package seoproject;
 
-import com.sun.servicetag.SystemEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,12 +11,20 @@ import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import seoproject.Process;
 
 /**
  *
  * @author Vince
  */
-public class SEOproject {
+public class SEOproject
+{
 
     /**
      * @param args the command line arguments
@@ -28,19 +35,12 @@ public class SEOproject {
         {
             try
             {
-               URL url1 = new URL (args[0]);
-               URL url2= new URL(args[1]);
-               String content1 = loadUrl(url1);
-               String content2 = loadUrl(url2);
-               Process proc1 = new Process(content1);
-               Process proc2 = new Process(content2);
-               ArrayList<String> res1 = proc1.lemmatisation();
-               ArrayList<String> res2 = proc2.lemmatisation();
-               
-               System.out.println (res1);
-                
-                
-               
+                String content1 = getTextOnly(args[0]);
+                String content2 = getTextOnly(args[1]);
+                Process proc1 = new Process(content1);
+                Process proc2 = new Process(content2);
+                ArrayList<String> res1 = proc1.lemmatisation();
+                ArrayList<String> res2 = proc2.lemmatisation();
             }
             catch (Exception e)
             {
@@ -59,39 +59,65 @@ public class SEOproject {
         
     }
     
-    
-  public static String loadUrl(URL url) throws IOException {
-    InputStream stream = null;
-    try
+    public static String getTextOnly(String url)
     {
-      stream = url.openStream();
-      return loadStream(stream);
+        Document doc;
+        String result = "";
+         try 
+         {
+             doc = Jsoup.connect(url).get();
+             Elements body = doc.select("body");
+             Elements list_balise = body.select("*");
+              for (Element element : list_balise)
+              {
+                  if (element.hasText())
+                  {
+                     result += " "+(element.ownText());
+                  }
+              }
+             return result;
+
+         } catch (IOException ex)
+         {
+             Logger.getLogger(SEOproject.class.getName()).log(Level.SEVERE, null, ex);
+         }
+
+        return "";
     }
-    finally
+   
+    public static String loadUrl(URL url) throws IOException
     {
-      if (stream != null)
-      {
+        InputStream stream = null;
         try
         {
-          stream.close();
-        } 
-        catch (IOException e)
-        {
+            stream = url.openStream();
+            return loadStream(stream);
         }
-      }
+        finally
+        {
+            if (stream != null)
+            {
+                try
+                {
+                    stream.close();
+                } 
+                catch (IOException e)
+                {
+                }
+            }
+        }
     }
-  }
     
     public static String loadStream(InputStream stream) throws IOException
     {
-      Reader reader = new InputStreamReader(stream, Charset.forName("UTF-8"));
-      char[] buffer = new char[1024];
-      int count;
-      StringBuilder str = new StringBuilder();
-      while ((count = reader.read(buffer)) != -1)
-      {
-        str.append(buffer, 0, count);
-      }
-      return str.toString();
+        Reader reader = new InputStreamReader(stream, Charset.forName("UTF-8"));
+        char[] buffer = new char[1024];
+        int count;
+        StringBuilder str = new StringBuilder();
+        while ((count = reader.read(buffer)) != -1)
+        {
+            str.append(buffer, 0, count);
+        }
+        return str.toString();
     }
 }
